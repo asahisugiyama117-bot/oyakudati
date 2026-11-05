@@ -1,14 +1,20 @@
-// ===================================================
-// API設定・基本設定
-// ===================================================
+//OpenWeatherMap APIのアクセスキーと、静岡市の緯度（34.9769）・経度（138.3831）を設定//
 const WEATHER_API_KEY = "b6f83b3c70978dc418db7352e80c8989";
 const SHIZUOKA_LAT = 34.9769;
 const SHIZUOKA_LON = 138.3831;
 
-/* ===================================================
-   JR草薙駅 時刻表データ (東海道本線)
-   =================================================== */
+//HTMLの読み込みが完了したタイミングで画面の各機能を初期起動//
+document.addEventListener("DOMContentLoaded", () => {
+    initClock();
+    fetchWeather();
+    fetchNews();
+    updateTrainInfo();
+    setInterval(updateTrainInfo, 10000); // 10秒ごとに電車案内を更新
+});
+
+//電車の発車時刻を保持するマスターデータです。//
 const TRAIN_TIMETABLE = {
+    // 上り（沼津・熱海方面）
     up: {
         weekday: [
             "05:12", "05:33", "05:52",
@@ -53,6 +59,7 @@ const TRAIN_TIMETABLE = {
             "23:01", "23:21", "23:41"
         ]
     },
+    // 下り（静岡・浜松方面）
     down: {
         weekday: [
             "05:38", "05:54",
@@ -99,16 +106,11 @@ const TRAIN_TIMETABLE = {
     }
 };
 
-// 画面読み込み完了時の処理
-document.addEventListener("DOMContentLoaded", () => {
-    initClock();
-    fetchWeather();
-    fetchNews();
-    updateTrainInfo();
-    setInterval(updateTrainInfo, 10000); // 10秒ごとに電車案内を更新
-});
 
-/* 1. タブ切り替え機能 */
+
+// タブ切り替え機能 画面の表示セクションを切り替える UI 用の関数//
+//天気・電車・時計・ニュースの4つのエリアを一旦すべて非表示 (display = "none") にします。
+//引数 tabName（"weather", "train", "clock", "news"）に応じて、指定されたセクションだけを表示 (display = "block") に切り替える//
 function switchTab(tabName) {
     const weatherSection = document.querySelector(".weather-info");
     const trainSection = document.querySelector(".train-info");
@@ -128,7 +130,10 @@ function switchTab(tabName) {
     if (tabName === "news") newsSection.style.display = "block";
 }
 
-/* 2. リアルタイム時計＆日付機能 */
+
+// 2. リアルタイム時計＆日付機能 //
+//画面上の日付と現在時刻を毎秒更新してリアルタイム表示します。//
+//setInterval(updateTime, 1000) により、1秒周期で自動実行//
 function initClock() {
     const dayOfWeekStr = ["日", "月", "火", "水", "木", "金", "土"];
 
@@ -164,7 +169,8 @@ function initClock() {
     setInterval(updateTime, 1000);
 }
 
-/* 3. 天気API（現在の天気 ＋ 5時間帯予報） */
+// 3. 天気API（現在の天気 ＋ 5時間帯予報） //
+//fetchWeather() 役割: OpenWeatherMap API から「現在の天気と気温」を取得//
 async function fetchWeather() {
     const ondoElem = document.getElementById("ondo");
     const tenkiElem = document.getElementById("tenki");
@@ -172,6 +178,7 @@ async function fetchWeather() {
     const navTemp = document.getElementById("nav-weather-temp");
     const navDesc = document.getElementById("nav-weather-desc");
 
+    //APIエラー時やネットワーク不通時は setFallbackData() が働き、ダミーデータ（20℃・晴れ）を表示//
     const setFallbackData = () => {
         if (ondoElem) ondoElem.textContent = "気温: 20℃";
         if (tenkiElem) tenkiElem.textContent = "天気: 晴れ";
@@ -208,6 +215,7 @@ async function fetchWeather() {
     }
 }
 
+//fetchHourlyForecast() 役割: OpenWeatherMap の5日間/3時間ごとの予報APIから、直近5時間分の予報を取得//
 async function fetchHourlyForecast() {
     const hourlyContainer = document.getElementById("hourly-forecast");
     if (!hourlyContainer) return;
@@ -266,7 +274,7 @@ function renderFallbackHourly() {
     `).join("");
 }
 
-/* 4. ニュースAPI（安定プロキシ経由でYahoo!ニュースを取得） */
+//ニュースAPI（安定プロキシ経由でYahoo!ニュースを取得）主要トピックスのRSSを取得し、画面に表示する//
 async function fetchNews() {
     const newsContainer = document.getElementById("news");
     const navNewsHead = document.getElementById("nav-news-head");
@@ -320,7 +328,7 @@ async function fetchNews() {
     }
 }
 
-/* 5. 電車情報自動計算 */
+//updateTrainInfo() 役割: 現在時刻に基づき、次の電車の発車時刻を計算し、画面に表示する//
 function updateTrainInfo() {
     const now = new Date();
     const isWeekend = (now.getDay() === 0 || now.getDay() === 6);

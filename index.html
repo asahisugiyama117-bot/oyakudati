@@ -3,12 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-        <title>oyakudatiapp</title>
-        <link rel="stylesheet" href="style.css">
-        <script src="script.js" defer></script>
-        <script src="script1.js" defer></script>
-    </meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常葉学生お役立ち情報</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 
 <body>
@@ -16,45 +14,49 @@
         <h1 class="app-title">常葉学生お役立ち情報</h1>
     </header>
 
-    <main id="main-display" class="main-display"> <div class="weather-info">
-        <h2>天気情報</h2>
-        <p>静岡市の天気情報を表示します。</p>
-        <div class="weather">
-            <div class="weather-1" id="weather-1">
-                <div class="ondo" id="ondo"></div>
-                <div class="tenki" id="tenki"></div>
+    <main id="main-display" class="main-display">
+        <!-- 天気エリア -->
+        <div class="weather-info">
+            <h2>天気情報</h2>
+            <p>静岡市の天気情報を表示します。</p>
+            <div class="weather">
+                <div class="weather-1" id="weather-1">
+                    <div class="ondo" id="ondo"></div>
+                    <div class="tenki" id="tenki"></div>
+                </div>
+                <div class="gazou"></div>
             </div>
-            <div class="gazou"></div>
+
+            <!-- 時間帯予報（メイン枠の中に正しく配置） -->
+            <h3 style="margin-top: 1.5rem; font-size: 1rem; color: #475569;">今後の時間帯予報</h3>
+            <div class="hourly-forecast" id="hourly-forecast"></div>
         </div>
-    </div>
 
-    <div class="train-info" style="display: none;">
-        <h2>電車情報</h2>
-        <h3>JR草薙駅</h3>
-
-        <div class="jr1" >
-            <div class="jikoku" id="jikoku"></div>
-            <div class="jikoku2" id="jikoku2"></div>
+        <!-- 電車エリア -->
+        <div class="train-info" style="display: none;">
+            <h2>電車情報</h2>
+            <h3>JR草薙駅</h3>
+            <div class="jr1">
+                <div class="jikoku" id="jikoku"></div>
+                <div class="jikoku2" id="jikoku2"></div>
+            </div>
         </div>
-    </div>
 
-    <div class="clock-info" style="display: none;">
-        <h2>時刻情報</h2>
-        <div class="jikoku2" id="jikoku2">
+        <!-- 時刻エリア -->
+        <div class="clock-info" style="display: none;">
+            <h2>時刻情報</h2>
             <div class="date-display" id="date-display">----年--月--日（-）</div>
             <div class="clock-display" id="clock-display">--:--:--</div>
         </div>
-    </div>
 
-    <div class="news-info" style="display: none;">
-        <h2>ニュース情報</h2>
-        <div class="news" id="news"></div>
-    </div>
-    
+        <!-- ニュースエリア -->
+        <div class="news-info" style="display: none;">
+            <h2>ニュース情報</h2>
+            <div class="news" id="news"></div>
+        </div>
     </main>
 
-    <nav class="button-grid">
-        <!-- 下部カードナビゲーション（縦長四角フレーム化） -->
+    <!-- 下部ボタンナビゲーション（1つに整理） -->
     <nav class="button-grid">
         <!-- 1. 天気カード -->
         <button onclick="switchTab('weather')" class="card-button weather-btn">
@@ -65,10 +67,6 @@
             <div class="card-body">
                 <div id="nav-weather-temp" class="card-main-val">--℃</div>
                 <div id="nav-weather-desc" class="card-sub-val">読み込み中...</div>
-                <h3 style="margin-top: 1.5rem; font-size: 1rem; color: #475569;">今後の時間帯予報</h3>
-            <div class="hourly-forecast" id="hourly-forecast">
-                <!-- JavaScriptでここに5つのカードが動的に挿入されます -->
-            </div>
             </div>
         </button>
 
@@ -79,8 +77,8 @@
                 <span class="card-title">JR草薙駅</span>
             </div>
             <div class="card-body">
-                <div id="nav-train-next" class="card-main-val">14:40</div>
-                <div id="nav-train-dest" class="card-sub-val">静岡方面 普通</div>
+                <div id="nav-train-next" class="card-main-val">--:--</div>
+                <div id="nav-train-dest" class="card-sub-val">計算中...</div>
             </div>
         </button>
 
@@ -107,8 +105,6 @@
             </div>
         </button>
     </nav>
-    </nav>
-
-   
 </body>
+
 </html>
